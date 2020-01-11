@@ -1,0 +1,18 @@
+﻿<Project Sdk="Peachpie.NET.Sdk/0.9.800">
+  
+  <PropertyGroup>
+    <OutputType>library</OutputType>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Peachpie.Benchmarks.$(Configuration)</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="**/*.php" />
+  </ItemGroup>
+
+  <!-- Force building the Debug configuration after the Release one -->
+  <Target Name="BuildDebugAsWell" AfterTargets="AfterBuild" Condition="'$(Configuration)' == 'Release'">
+    <Exec Command="dotnet build -c Debug" ConsoleToMSBuild="true" LogStandardErrorAsError="true" WorkingDirectory="$(ProjectDir)" />
+  </Target>
+  
+</Project>

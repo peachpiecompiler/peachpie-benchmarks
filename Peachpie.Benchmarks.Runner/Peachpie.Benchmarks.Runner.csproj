@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.12.0" />
+    <PackageReference Include="Peachpie.App" Version="1.0.0-dev" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Release version -->
+    <ProjectReference Include="../Peachpie.Benchmarks/Peachpie.Benchmarks.msbuildproj" />
+    <!-- Debug version - target the explicit assembly -->
+    <Reference Include="Peachpie.Benchmarks.Debug.dll">
+      <HintPath>..\Peachpie.Benchmarks\bin\Debug\netstandard2.0\Peachpie.Benchmarks.Debug.dll</HintPath>
+      <Aliases>transformations_Debug</Aliases>
+    </Reference>
+  </ItemGroup>
+  
+</Project>
