@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29424.173
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "Peachpie.Benchmarks", "Peachpie.Benchmarks\Peachpie.Benchmarks.msbuildproj", "{7452D57B-DA18-4162-8CD2-1F9CAA465C02}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Peachpie.Benchmarks.Runner", "Peachpie.Benchmarks.Runner\Peachpie.Benchmarks.Runner.csproj", "{7C3EBEBD-0852-4026-8D1F-E2559B0BB2F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Peachpie.Benchmarks.Runner", "Peachpie.Benchmarks.Runner\Peachpie.Benchmarks.Runner.csproj", "{7C3EBEBD-0852-4026-8D1F-E2559B0BB2F8}"
 	ProjectSection(ProjectDependencies) = postProject
 		{7452D57B-DA18-4162-8CD2-1F9CAA465C02} = {7452D57B-DA18-4162-8CD2-1F9CAA465C02}
 	EndProjectSection

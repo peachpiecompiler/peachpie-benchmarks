@@ -1,5 +1,5 @@
-﻿extern alias transformations_Debug;
-using TransformationsDebug = transformations_Debug::Peachpie.Benchmarks.Transformations;
+﻿extern alias transformations_O1;
+using TransformationsO1 = transformations_O1::Peachpie.Benchmarks.Transformations;
 using TransformationsRelease = Peachpie.Benchmarks.Transformations;
 
 using System;
@@ -34,25 +34,25 @@ namespace Peachpie.Benchmarks
                 .With(BenchmarkLogicalGroupRule.ByCategory)
                 .CreateImmutableConfig();
 
-            var debugAssembly = typeof(TransformationsDebug.Helper).Assembly;
+            var o1Assembly = typeof(TransformationsO1.Helper).Assembly;
             var releaseAssembly = typeof(TransformationsRelease.Helper).Assembly;
 
-            // Add a method from each class in both Debug and Release version
+            // Add a method from each class in both O1 (optimized, but without transformations) and Release version
             var cases = new List<BenchmarkCase>();
-            foreach (var debugType in debugAssembly.GetTypes())
+            foreach (var o1Type in o1Assembly.GetTypes())
             {
-                var debugMethod = debugType.GetMethod("run");
-                if (debugMethod == null)
+                var o1Method = o1Type.GetMethod("run");
+                if (o1Method == null)
                     continue;
 
-                var releaseType = releaseAssembly.GetType(debugType.FullName);
+                var releaseType = releaseAssembly.GetType(o1Type.FullName);
                 var releaseMethod = releaseType.GetMethod("run");
 
-                cases.Add(BenchmarkCase.Create(new Descriptor(debugType, debugMethod), job, parameters, config));
+                cases.Add(BenchmarkCase.Create(new Descriptor(o1Type, o1Method), job, parameters, config));
                 cases.Add(BenchmarkCase.Create(new Descriptor(releaseType, releaseMethod), job, parameters, config));
             }
 
-            var runInfo = new BenchmarkRunInfo(cases.ToArray(), typeof(TransformationsDebug.Helper), config);
+            var runInfo = new BenchmarkRunInfo(cases.ToArray(), typeof(TransformationsO1.Helper), config);
             BenchmarkRunner.Run(runInfo);
         }
     }

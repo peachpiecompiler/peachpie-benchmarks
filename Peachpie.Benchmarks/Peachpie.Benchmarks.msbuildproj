@@ -1,9 +1,13 @@
 ﻿<Project Sdk="Peachpie.NET.Sdk/1.0.0-dev">
-  
+
   <PropertyGroup>
     <OutputType>library</OutputType>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>Peachpie.Benchmarks.$(Configuration)</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'O1'">
+    <Optimize>O1</Optimize>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,7 +16,7 @@
 
   <!-- Force building the Debug configuration after the Release one -->
   <Target Name="BuildDebugAsWell" AfterTargets="AfterBuild" Condition="'$(Configuration)' == 'Release'">
-    <Exec Command="dotnet build -c Debug" ConsoleToMSBuild="true" LogStandardErrorAsError="true" WorkingDirectory="$(ProjectDir)" />
+    <Exec Command="dotnet build -c O1" ConsoleToMSBuild="true" LogStandardErrorAsError="true" WorkingDirectory="$(ProjectDir)" />
   </Target>
-  
+
 </Project>
