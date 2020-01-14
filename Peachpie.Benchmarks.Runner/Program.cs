@@ -16,7 +16,7 @@ using BenchmarkDotNet.Diagnosers;
 using BenchmarkDotNet.Columns;
 using BenchmarkDotNet.Exporters;
 
-namespace Peachpie.Benchmarks
+namespace Peachpie.Benchmarks.Runner
 {
     class Program
     {
@@ -31,6 +31,7 @@ namespace Peachpie.Benchmarks
                 .With(ConfigOptions.DisableOptimizationsValidator)
                 .With(MemoryDiagnoser.Default)
                 .With(TargetMethodColumn.Type)
+                .With(ConfigurationColumn.Instance)
                 .With(BenchmarkLogicalGroupRule.ByCategory)
                 .CreateImmutableConfig();
 

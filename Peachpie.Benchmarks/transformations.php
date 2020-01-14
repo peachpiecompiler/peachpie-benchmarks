@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 namespace Peachpie\Benchmarks\Transformations;
 
 class Helper {}
