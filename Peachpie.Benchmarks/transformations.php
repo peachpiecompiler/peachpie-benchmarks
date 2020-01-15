@@ -28,6 +28,20 @@ class AssignCopyRemoval {
 	}
 }
 
+class ReturnCopyRemoval {
+	private final function bar($a) {
+		$b = $a;
+    $b[0] = 42;
+		return $b;
+	}
+
+	private static $a = [1, 2, 3];
+
+	public final function run() {
+		return $this->bar(self::$a);
+	}
+}
+
 class OrdStringInt {
     private final function ord_string_int(string $s, int $i) {
 		return ord($s[$i]);
