@@ -14,7 +14,7 @@
     <Compile Include="**/*.php" />
   </ItemGroup>
 
-  <!-- Force building the Debug configuration after the Release one -->
+  <!-- Force building the O1 configuration after the Release one -->
   <Target Name="BuildDebugAsWell" AfterTargets="AfterBuild" Condition="'$(Configuration)' == 'Release'">
     <Exec Command="dotnet build -c O1" ConsoleToMSBuild="true" LogStandardErrorAsError="true" WorkingDirectory="$(ProjectDir)" />
   </Target>

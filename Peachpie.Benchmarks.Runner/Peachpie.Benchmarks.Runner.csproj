@@ -17,7 +17,7 @@
     <!-- Release version -->
     <ProjectReference Include="../Peachpie.Benchmarks/Peachpie.Benchmarks.msbuildproj" />
     <!-- Debug version - target the explicit assembly -->
-    <Reference Include="Peachpie.Benchmarks.Debug.dll">
+    <Reference Include="Peachpie.Benchmarks.O1.dll">
       <HintPath>..\Peachpie.Benchmarks\bin\O1\netstandard2.0\Peachpie.Benchmarks.O1.dll</HintPath>
       <Aliases>transformations_O1</Aliases>
     </Reference>
