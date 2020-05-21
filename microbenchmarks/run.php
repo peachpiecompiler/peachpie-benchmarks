@@ -1,24 +1,43 @@
 <?php
 
-// Arguments: <dir1>/<benchmarkName1>[,..,<dirN>/<benchmarkNameN>] [iterationCount]
-// Example:   functions/call_user_func_001 1000000
+// Arguments: <benchmarkFilter> [iterationCount]
+// Example:   "functions/*" 1000000
 
-const EMPTY_BENCHMARK = 'basic/nothing';
+const EMPTY_BENCHMARK = 'emptyBenchmark';
 const DEFAULT_ITERATION_COUNT = 100000;
 
-$benchmarks = explode(",", $argv[1]);
+$benchmarkFilter = $argv[1];
 $iterationCount = $argv[2] ?? DEFAULT_ITERATION_COUNT;
-runAll($benchmarks, $iterationCount);
+runAll($benchmarkFilter, $iterationCount);
 
-function runAll($benchmarks, $iterationCount) {
-    // Always include the empty benchmark to measure the overhead
-    if (!in_array(EMPTY_BENCHMARK, $benchmarks)) {
-        $benchmarks[] = EMPTY_BENCHMARK;
+function runAll($benchmarkFilter, $iterationCount) {
+    // Include all the files with benchmarks according to the filter
+    foreach (glob($benchmarkFilter, GLOB_BRACE) as $file) {
+        if (pathinfo($file, PATHINFO_EXTENSION) == "php") {
+            require_once $file;
+        }
     }
 
-    // Include files, warm-up opcache, JIT, call-sites etc.
+    // Find all the benchmarking functions in the included files
+    $benchmarks = [];
+    foreach (get_defined_functions()['user'] as $fnName) {
+        $fn = new ReflectionFunction($fnName);
+
+        // From this file, include only EMPTY_BENCHMARK
+        if ($fn->getFileName() == __FILE__ && $fn->getName() != EMPTY_BENCHMARK) {
+            continue;
+        }
+
+        // Exclude helper functions starting with _
+        if ($fn->getShortName()[0] == '_') {
+            continue;
+        }
+
+        $benchmarks[] = $fn->getName();
+    }
+
+    // Warm-up opcache, JIT, call-sites etc.
     foreach ($benchmarks as $benchmark) {
-        require_once __DIR__ ."/". $benchmark .".php";
         runSingle($benchmark, 1);
     }
 
@@ -42,18 +61,16 @@ function runAll($benchmarks, $iterationCount) {
 }
 
 function runSingle($benchmark, $iterationCount) {
-    // Convert the benchmark name to its namespace and call the function run()
-    $ns = str_replace("/", "\\", $benchmark);
-    $fn = $ns ."\\run";
-
     $start = hrtime(true);
 
     // Perform the operation repeatively, measuring the total time of the whole batch
     for ($i = 0; $i < $iterationCount; $i++) {
-        $fn();
+        $benchmark();
     }
 
     $duration = hrtime(true) - $start;
     $avg = $duration / $iterationCount;
     return $avg;
 }
+
+function emptyBenchmark() {}
