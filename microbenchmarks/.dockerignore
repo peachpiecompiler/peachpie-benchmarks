@@ -1,0 +1,3 @@
+*.Dockerfile
+Run.ps1
+results.json
