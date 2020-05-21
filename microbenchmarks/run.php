@@ -5,6 +5,8 @@
 
 const EMPTY_BENCHMARK = 'emptyBenchmark';
 
+const CHUNK_COUNT = 100;
+
 $benchmarkFilter = $argv[1];
 $iterationCount = $argv[2];
 runAll($benchmarkFilter, $iterationCount);
@@ -43,10 +45,20 @@ function runAll($benchmarkFilter, $iterationCount) {
     // Run benchmark themselves and gather the rough results
     $results = [];
     foreach ($benchmarks as $benchmark) {
-        $avg = runSingle($benchmark, $iterationCount);    // TODO: Consider finding the iteration count dynamically
+        // Perform all the measurements in chunks
+        $chunkIterationCount = $iterationCount / CHUNK_COUNT;       // TODO: Consider finding the iteration count dynamically
+        $chunkAvgs = [];
+        for ($i = 0; $i < CHUNK_COUNT; $i++) {
+            $chunkAvgs[] = runSingle($benchmark, $chunkIterationCount) / $chunkIterationCount;
+        }
+
+        // Find average time
+        $avg = array_sum($chunkAvgs) / count($chunkAvgs);
+
         $results[$benchmark] = [
             'iterations' => $iterationCount,
-            'rough_avg_ns' => $avg
+            'rough_avg_ns' => $avg,
+            'rough_std_dev_ns' => getStandardDeviation($chunkAvgs, $avg)
         ];
     }
 
@@ -67,9 +79,16 @@ function runSingle($benchmark, $iterationCount) {
         $benchmark();
     }
 
-    $duration = hrtime(true) - $start;
-    $avg = $duration / $iterationCount;
-    return $avg;
+    return hrtime(true) - $start;
+}
+
+function getStandardDeviation($values, $avg) {
+    $variance = 0.0;
+    foreach ($values as $value) {
+        $variance += ($value - $avg) * ($value - $avg);
+    }
+
+    return sqrt($variance / count($values));
 }
 
 function emptyBenchmark() {}
