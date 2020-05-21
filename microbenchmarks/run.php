@@ -1,13 +1,12 @@
 <?php
 
-// Arguments: <benchmarkFilter> [iterationCount]
+// Arguments: <benchmarkFilter> <iterationCount>
 // Example:   "functions/*" 1000000
 
 const EMPTY_BENCHMARK = 'emptyBenchmark';
-const DEFAULT_ITERATION_COUNT = 100000;
 
 $benchmarkFilter = $argv[1];
-$iterationCount = $argv[2] ?? DEFAULT_ITERATION_COUNT;
+$iterationCount = $argv[2];
 runAll($benchmarkFilter, $iterationCount);
 
 function runAll($benchmarkFilter, $iterationCount) {
