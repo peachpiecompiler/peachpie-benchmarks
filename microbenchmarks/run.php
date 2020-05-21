@@ -6,6 +6,7 @@
 const EMPTY_BENCHMARK = 'emptyBenchmark';
 
 const CHUNK_COUNT = 100;
+const WARMUP_CHUNK_COUNT = 20;
 
 $benchmarkFilter = $argv[1];
 $iterationCount = $argv[2];
@@ -48,11 +49,12 @@ function runAll($benchmarkFilter, $iterationCount) {
         // Perform all the measurements in chunks
         $chunkIterationCount = $iterationCount / CHUNK_COUNT;       // TODO: Consider finding the iteration count dynamically
         $chunkAvgs = [];
-        for ($i = 0; $i < CHUNK_COUNT; $i++) {
+        for ($i = 0; $i < WARMUP_CHUNK_COUNT + CHUNK_COUNT; $i++) {
             $chunkAvgs[] = runSingle($benchmark, $chunkIterationCount) / $chunkIterationCount;
         }
 
-        // Find average time
+        // Remove warmup data and find average time
+        $chunkAvgs = array_slice($chunkAvgs, WARMUP_CHUNK_COUNT);
         $avg = array_sum($chunkAvgs) / count($chunkAvgs);
 
         $results[$benchmark] = [
