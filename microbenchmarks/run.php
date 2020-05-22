@@ -12,7 +12,7 @@ $benchmarkFilter = $argv[1];
 $iterationCount = $argv[2];
 runAll($benchmarkFilter, $iterationCount);
 
-function runAll($benchmarkFilter, $iterationCount) {
+function runAll(string $benchmarkFilter, int $iterationCount) {
     // Include all the files with benchmarks according to the filter
     foreach (glob($benchmarkFilter, GLOB_BRACE) as $file) {
         if (pathinfo($file, PATHINFO_EXTENSION) == "php") {
@@ -52,7 +52,7 @@ function runAll($benchmarkFilter, $iterationCount) {
         for ($i = 0; $i < WARMUP_CHUNK_COUNT + CHUNK_COUNT; $i++) {
             $chunkAvgs[] = runSingle($benchmark, $chunkIterationCount) / $chunkIterationCount;
         }
-
+        
         // Remove warmup data and find average time
         $chunkAvgs = array_slice($chunkAvgs, WARMUP_CHUNK_COUNT);
         $avg = array_sum($chunkAvgs) / count($chunkAvgs);
@@ -73,7 +73,7 @@ function runAll($benchmarkFilter, $iterationCount) {
     echo json_encode($results);
 }
 
-function runSingle($benchmark, $iterationCount) {
+function runSingle(string $benchmark, int $iterationCount) : float {
     $start = hrtime(true);
 
     // Perform the operation repeatively, measuring the total time of the whole batch
@@ -84,7 +84,7 @@ function runSingle($benchmark, $iterationCount) {
     return hrtime(true) - $start;
 }
 
-function getStandardDeviation($values, $avg) {
+function getStandardDeviation(array $values, float $avg) : float {
     $variance = 0.0;
     foreach ($values as $value) {
         $variance += ($value - $avg) * ($value - $avg);
