@@ -13,7 +13,7 @@ function Get-TagName {
 }
 
 # Gather *.Dockerfile files according to the filter
-$dockerFiles = Get-ChildItem . -Filter $dockerFilter | Where-Object {$_.Name -like "*.Dockerfile"}
+$dockerFiles = Get-ChildItem . -Filter $dockerFilter | Where-Object {$_.Name -like "*.dockerfile"}
 
 # Generate the docker images in question (potential re-generation is quick thanks to Docker caching)
 Foreach ($dockerFile in $dockerFiles) {
