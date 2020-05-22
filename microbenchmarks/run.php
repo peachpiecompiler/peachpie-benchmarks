@@ -120,5 +120,13 @@ function empty_func()
 {
 }
 
+if (!function_exists('hrtime')) {
+    // Poyfill for HHVM
+    function hrtime(bool $dummy): int {
+        // Convert seconds to nanoseconds
+        return microtime(true) * 1000000000;
+    }
+}
+
 //
 echo json_encode(Runner::run(@$argv[1] ?? "*/*", @$argv[2] ?? 100000));
