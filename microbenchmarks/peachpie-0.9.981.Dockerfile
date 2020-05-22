@@ -7,4 +7,4 @@ RUN echo "{ \"msbuild-sdks\": { \"Peachpie.NET.Sdk\": \"0.9.981\" } }" > global.
 RUN dotnet restore
 RUN dotnet build -c Release
 
-ENTRYPOINT ["dotnet", "run", "-c", "Release"]
+ENTRYPOINT ["dotnet", "run", "--no-build", "-c", "Release"]
