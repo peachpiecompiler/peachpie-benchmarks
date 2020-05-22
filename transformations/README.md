@@ -1,6 +1,6 @@
-# Peachpie Benchmarks
+# Transformation Benchmarks
 
-This repository uses [BenchmarkDotNet](https://benchmarkdotnet.org) to benchmark impact of the transformations performed as optimizations during the compilation of PHP code by Peachpie.
+These benchmarks use [BenchmarkDotNet](https://benchmarkdotnet.org) to measure impact of the transformations performed as optimizations during the compilation of PHP code by Peachpie.
 To run them, perform the following steps:
 
 1. Set the version of Peachpie SDK in ```global.json``` to the one you want to benchmark.
