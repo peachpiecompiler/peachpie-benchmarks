@@ -4,6 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <StartupObject>run.php</StartupObject>
+    <NoWarn>PHP5011</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
