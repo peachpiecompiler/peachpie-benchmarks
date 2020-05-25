@@ -1,7 +1,7 @@
 param (
   [string] $dockerFilter='*',
   [string] $benchmarkFilter='*/*',
-  [int] $iterationCount=100000,
+  [int] $iterationCount=1000000,
   [string] $outputFile='results.json'
 )
 
