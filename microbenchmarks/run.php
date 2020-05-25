@@ -84,7 +84,9 @@ class Runner
         {
             $fn = new ReflectionFunction($fnName);
 
-            if (in_array($fn->getFileName(), $files) && $fn->getShortName()[0] != '_')
+            if (in_array($fn->getFileName(), $files) &&
+                $fn->getShortName()[0] != '_' &&
+                strpos($fn->getDocComment(), '@ignore') === false)
             {
                 $benchmarks[] = $fn;
             }
