@@ -132,5 +132,5 @@ if (!function_exists('hrtime')) {
 
 //
 $filter = isset($argv[1]) ? $argv[1] : "*/*";
-$iterations = isset($argv[2]) ? $argv[2] : 0;
+$iterations = isset($argv[2]) ? (int)$argv[2] : 0;
 echo json_encode(Runner::run($filter, $iterations ? $iterations : 100000));
