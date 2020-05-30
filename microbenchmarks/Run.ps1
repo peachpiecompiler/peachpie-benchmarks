@@ -33,4 +33,5 @@ Foreach ($dockerFile in $dockerFiles) {
 }
 
 # Print the merged result to the given output file
+Write-Host "Writing results to ${outputFile}." -ForegroundColor Green
 ConvertTo-Json -Compress $results | Out-File $outputFile
