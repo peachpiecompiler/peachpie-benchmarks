@@ -131,4 +131,4 @@ if (!function_exists('hrtime')) {
 }
 
 //
-echo json_encode(Runner::run(@$argv[1] ?? "*/*", @$argv[2] ?? 100000));
+echo json_encode(Runner::run(@$argv[1] ?? "*/*", (int)(@$argv[2] ?? 100000)));
