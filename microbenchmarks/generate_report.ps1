@@ -4,13 +4,8 @@ param (
 )
 
 "
-<html>
-<head>
-  <meta charset='UTF-8' />
-  <script src='https://cdn.jsdelivr.net/npm/apexcharts'></script>
-</head>
-<body>
-  <div id='chart'></div>" |
+<script src='https://cdn.jsdelivr.net/npm/apexcharts'></script>
+<div id='chart'></div>" |
   Out-File -FilePath $outputFile
 
 $results = Get-Content -Raw -Path $resultjson | ConvertFrom-Json
@@ -50,14 +45,14 @@ foreach ($r in $results.PSObject.Properties) {
 "<script>
   var options = {
     series: [" |
-       Out-File -FilePath $outputFile -Append
+  Out-File -FilePath $outputFile -Append
 
 foreach ($row in $series) {
    "{$row}," | Out-File -FilePath $outputFile -Append
 }
 
 "     ],
-          chart: {
+        chart: {
           type: 'bar',
           height: 430
         },
@@ -84,14 +79,10 @@ foreach ($row in $series) {
         },
         xaxis: {
           categories: [$([system.String]::Join(",", $categories))],
-        },
-        };
-
-        var chart = new ApexCharts(document.querySelector('#chart'), options);
-        chart.render();
-      
-      
-    </script>    
-  </body>
-</html>" |
-       Out-File -FilePath $outputFile -Append
+    },
+  };
+  var chart = new ApexCharts(document.querySelector('#chart'), options);
+  chart.render();
+</script>
+" |
+  Out-File -FilePath $outputFile -Append
