@@ -16,16 +16,19 @@ function Get-TagName {
 $dockerFiles = Get-ChildItem . -Filter $dockerFilter | Where-Object {$_.Name -like "*.Dockerfile"}
 
 # Generate the docker images in question (potential re-generation is quick thanks to Docker caching)
-Foreach ($dockerFile in $dockerFiles) {
-  $tag = Get-TagName $dockerFile
-  & docker build -f $dockerFile --tag $tag .
-}
 
 # Run the benchmarks and gather their results
 $results = @{}
 Foreach ($dockerFile in $dockerFiles) {
   $tag = Get-TagName $dockerFile
+
+  Write-Host "Building ${tag}:" -ForegroundColor Yellow
+  & docker build -f $dockerFile --tag $tag .
+
+  Write-Host "Running ${tag}:" -ForegroundColor Yellow
   $tagResultsJson = (& docker run $tag $benchmarkFilter $iterationCount) | Out-String
+
+  Write-Host "${tagResultsJson}"
   $results[$dockerFile.Basename] = ConvertFrom-Json $tagResultsJson
 }
 
