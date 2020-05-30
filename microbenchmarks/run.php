@@ -8,7 +8,7 @@ class Runner
     const CHUNK = 100;
     const EMPTY_FUNCTION = "empty_func";
 
-    static function run(string $benchmarkFilter, int $iterations): array
+    static function run($benchmarkFilter, $iterations): array
     {
         $benchmarks = self::collectBechmarks($benchmarkFilter);
         $results = [];
@@ -132,5 +132,5 @@ if (!function_exists('hrtime')) {
 
 //
 $filter = isset($argv[1]) ? $argv[1] : "*/*";
-$iterations = isset($argv[2]) ? (int)$argv[2] : 100000;
-echo json_encode(Runner::run($filter, $iterations));
+$iterations = isset($argv[2]) ? $argv[2] : 0;
+echo json_encode(Runner::run($filter, $iterations ? $iterations : 100000));
