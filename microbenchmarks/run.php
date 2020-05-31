@@ -62,28 +62,17 @@ class Runner
 
     static function collectBechmarks(string $benchmarkFilter)
     {
-        echo "/* filter '$benchmarkFilter' */\n";
         // Include all the files with benchmarks according to the filter
         $files = [];
         foreach (glob($benchmarkFilter, GLOB_BRACE) as $file)
         {
-            echo "/*$file;";
-
             if (pathinfo($file, PATHINFO_EXTENSION) == "php")
             {
-                echo " require_once;";
                 if (false !== require_once $file)
                 {
-                    echo " ok;";
                     $files[] = realpath($file);
                 }
-                else
-                {
-                    echo " false;";
-                }
             }
-
-            echo "*/\n";
         }
 
         // Find all the benchmarking functions in the included files
