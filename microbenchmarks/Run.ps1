@@ -23,7 +23,6 @@ Foreach ($dockerFile in $dockerFiles) {
   $tag = Get-TagName $dockerFile
 
   Write-Host "Building ${tag}:" -ForegroundColor Yellow
-  & docker rmi -f $tag
   & docker build -f $dockerFile --tag $tag .
 
   Write-Host "Running ${tag}:" -ForegroundColor Yellow
