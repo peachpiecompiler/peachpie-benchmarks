@@ -26,7 +26,7 @@ Foreach ($dockerFile in $dockerFiles) {
   & docker build -f $dockerFile --tag $tag .
 
   Write-Host "Running ${tag}:" -ForegroundColor Yellow
-  $tagResultsJson = (& docker run $tag $benchmarkFilter $iterationCount) | Out-String
+  $tagResultsJson = (& docker run $tag "$benchmarkFilter" "$iterationCount") | Out-String
 
   Write-Host "${tagResultsJson}"
   $results[$dockerFile.Basename] = ConvertFrom-Json $tagResultsJson
