@@ -77,16 +77,19 @@ class Runner
 
         // Find all the benchmarking functions in the included files
         $benchmarks = [
-            new ReflectionFunction(self::EMPTY_FUNCTION)
+            //new ReflectionFunction(self::EMPTY_FUNCTION)
         ];
 
         foreach (get_defined_functions()['user'] as $fnName)
         {
             $fn = new ReflectionFunction($fnName);
 
-            if (in_array($fn->getFileName(), $files) &&
+            if (//in_array($fn->getFileName(), $files) &&
+                $fn->getShortName() != "hrtime" &&
+                //$fn->getShortName() != self::EMPTY_FUNCTION &&
                 $fn->getShortName()[0] != '_' &&
-                strpos($fn->getDocComment(), '@ignore') === false)
+                //strpos($fn->getDocComment(), '@ignore') === false &&
+                true)
             {
                 $benchmarks[] = $fn;
             }
