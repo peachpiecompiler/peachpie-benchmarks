@@ -22,7 +22,7 @@ Add a new subdirectory to the `apps` directory with the following contents (see 
 - `benchmarkConfig.json`: Configuration of benchmark parameters, simple JSON object with the following property (might be extended in the future):
     - `requestPath`: The path portion of a HTTP request with the leading `/`, e.g. `"/hello.php"`.
 - `install.sh`: A shell script to be executed when building server docker images. It is expected to be run from the current directory and obtain a directory to put the application as the only command line argument.
-- *TODO: optional `.Dockerfile` for database.*
+- `db.Dockerfile`: Optional. If present, it is used to initialize a database on the domain `appbenchmarks-db`. Currently, only MySQL is supported.
 - Any other files used to successfuly initialize the application, such as PHP source files.
 
 ## Adding new webserver

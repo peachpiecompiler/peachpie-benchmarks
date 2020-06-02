@@ -13,6 +13,7 @@ $maxRequests = 10000000
 $network = "appbenchmarks"
 $clientContainer = "${network}-client"
 $serverContainer = "${network}-server"
+$dbContainer = "${network}-db"
 $clientTag = "${clientContainer}:latest"
 
 # Helper function to create a reasonably named tag for the generated image
@@ -21,6 +22,12 @@ function Get-ServerTagName {
   $serverName = $serverDockerFile.Basename.ToLower()
   $appName = $appDir.Name.ToLower()
   return "appbenchmarks-${serverName}-app-${appName}:latest"
+}
+
+function Get-DbTagName {
+  param ($appDir)
+  $appName = $appDir.Name.ToLower()
+  return "appbenchmarks-app-${appName}-db:latest"
 }
 
 # Helper function for parsing text information using Regex
@@ -36,11 +43,17 @@ $serverDockerFiles = Get-ChildItem . -Filter $serverDockerFilter | Where-Object 
 # Gather all the directories of all the apps to benchmark
 $appDirs = Get-ChildItem ./apps -Filter $appFilter
 
-# Generate all the docker images, one for each pair of server and app
-Foreach ($serverDockerFile in $serverDockerFiles) {
-  Foreach ($appDir in $appDirs) {
+# Generate all the docker images, one for each pair of server and app, and an optional database for each app
+Foreach ($appDir in $appDirs) {
+  Foreach ($serverDockerFile in $serverDockerFiles) {
     $tag = Get-ServerTagName $serverDockerFile $appDir
     & docker build --tag $tag --file $serverDockerFile --build-arg app=$appDir .
+  }
+
+  $dbDockerfile = "./apps/${appDir}/db.Dockerfile"
+  if (Test-Path $dbDockerfile) {
+    $dbTag = Get-DbTagName $appDir
+    & docker build --tag $dbTag --file $dbDockerfile "./apps/${appDir}"
   }
 }
 
@@ -62,6 +75,12 @@ Foreach ($serverDockerFile in $serverDockerFiles) {
     # Run the client container in the network
     & docker run --name $clientContainer --network $network --detach --rm --tty $clientTag
 
+    # Run the database container if its image is available
+    $dbTag = Get-DbTagName $appDir
+    if (& docker images -q $dbTag) {
+      & docker run --name $dbContainer --network $network --detach --rm $dbTag
+    }
+
     # Compose the URL to run the benchmarks on
     $appDirFullPath = $appDir.Fullname
     $benchmarkConfig = Get-Content "${appDirFullPath}/benchmarkConfig.json" | ConvertFrom-Json
@@ -69,7 +88,18 @@ Foreach ($serverDockerFile in $serverDockerFiles) {
     $url = "http://${serverContainer}${requestPath}"
 
     # Wait for the server to start
-    Start-Sleep -s 10
+    do {
+      Write-Output "Waiting for server.."
+      Start-Sleep -s 3
+      & docker exec $clientContainer ab -n 1 $url
+    } until ($?)
+
+    # Wait for the DB to start
+    do {
+      Write-Output "Waiting for DB.."
+      Start-Sleep -s 3
+      & docker exec --env MYSQL_PWD=password $clientContainer mysql -u root -h $dbContainer -e ";"
+    } until ($?)
 
     # Warm-up server (the client is reused to prevent from cooling it down due to reset)
     & docker exec $clientContainer ab -t $seconds -c $concurrency -n $maxRequests $url
@@ -88,7 +118,7 @@ Foreach ($serverDockerFile in $serverDockerFiles) {
     }
 
     # Stop the containers (will be removed thanks to --rm on start)
-    & docker stop $clientContainer $serverContainer
+    & docker stop -t 3 $clientContainer $serverContainer $dbContainer
   }
 }
 
