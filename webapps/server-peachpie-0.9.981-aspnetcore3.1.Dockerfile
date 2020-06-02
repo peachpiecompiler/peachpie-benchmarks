@@ -1,16 +1,19 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1
 
-ARG app
-
 COPY ./config/peachpie /peachpie
+
+# Restore NuGet packages before the specific app is questioned to better utilize Docker image caching
+WORKDIR /peachpie
+RUN echo "{ \"msbuild-sdks\": { \"Peachpie.NET.Sdk\": \"0.9.981\" } }" > global.json
+RUN dotnet restore
+
+ARG app
 
 COPY ./apps/$app /app
 WORKDIR /app
 RUN ["/app/install.sh", "/peachpie/Website"]
 
 WORKDIR /peachpie
-RUN echo "{ \"msbuild-sdks\": { \"Peachpie.NET.Sdk\": \"0.9.981\" } }" > global.json
-RUN dotnet restore
 RUN dotnet build -c Release
 
 WORKDIR /peachpie/Server
