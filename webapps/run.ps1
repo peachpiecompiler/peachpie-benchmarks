@@ -47,7 +47,8 @@ $appDirs = Get-ChildItem ./apps -Filter $appFilter
 Foreach ($appDir in $appDirs) {
   Foreach ($serverDockerFile in $serverDockerFiles) {
     $tag = Get-ServerTagName $serverDockerFile $appDir
-    & docker build --tag $tag --file $serverDockerFile --build-arg app=$appDir .
+    $app = $appDir.Name
+    & docker build --tag $tag --file $serverDockerFile --build-arg app=$app .
   }
 
   $dbDockerfile = "./apps/${appDir}/db.Dockerfile"
