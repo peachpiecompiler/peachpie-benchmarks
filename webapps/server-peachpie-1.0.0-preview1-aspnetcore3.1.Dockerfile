@@ -17,4 +17,4 @@ WORKDIR /peachpie
 RUN dotnet build -c Release
 
 WORKDIR /peachpie/Server
-ENTRYPOINT ["dotnet", "run", "--no-build", "-c", "Release"]
+ENTRYPOINT ["dotnet", "run", "--no-build", "-c", "Release", "-f", "netcoreapp3.1"]
