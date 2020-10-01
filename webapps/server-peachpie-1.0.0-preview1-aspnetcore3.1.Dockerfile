@@ -13,8 +13,6 @@ COPY ./apps/$app /app
 WORKDIR /app
 RUN ["/app/install.sh", "/peachpie/Website"]
 
-WORKDIR /peachpie
-RUN dotnet build -c Release
-
 WORKDIR /peachpie/Server
+RUN dotnet build -c Release -f netcoreapp3.1
 ENTRYPOINT ["dotnet", "run", "--no-build", "-c", "Release", "-f", "netcoreapp3.1"]
