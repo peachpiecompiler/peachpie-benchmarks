@@ -52,37 +52,43 @@ foreach ($row in $series) {
 }
 
 "     ],
-        chart: {
-          type: 'bar',
-          height: 430
-        },
-        plotOptions: {
-          bar: {
-            horizontal: true,
-            dataLabels: {
-              position: 'top',
-            },
-          }
-        },
-        dataLabels: {
-          enabled: true,
-          offsetX: -6,
-          style: {
-            fontSize: '12px',
-            colors: ['#fff']
-          }
-        },
-        stroke: {
-          show: true,
-          width: 1,
+      chart: {
+        type: 'bar',
+        height: 430
+      },
+      plotOptions: {
+        bar: {
+          horizontal: true,
+          dataLabels: {
+            position: 'top',
+          },
+        }
+      },
+      dataLabels: {
+        enabled: true,
+        offsetX: -6,
+        style: {
+          fontSize: '12px',
           colors: ['#fff']
-        },
-        xaxis: {
-          categories: [$([system.String]::Join(",", $categories))],
-    },
+        }
+      },
+      stroke: {
+        show: true,
+        width: 1,
+        colors: ['#fff']
+      },
+      xaxis: {
+        categories: [$([system.String]::Join(",", $categories))],
+      },
+      yaxis: {
+        logarithmic: true
+      }
   };
   var chart = new ApexCharts(document.querySelector('#chart'), options);
-  chart.render();
+  window.onload = function () {
+    chart.render();
+  }
+
 </script>
 " |
   Out-File -FilePath $outputFile -Append
