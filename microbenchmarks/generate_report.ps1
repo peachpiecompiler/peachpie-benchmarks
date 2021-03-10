@@ -80,9 +80,6 @@ foreach ($row in $series) {
       xaxis: {
         categories: [$([system.String]::Join(",", $categories))],
       },
-      yaxis: {
-        logarithmic: true
-      }
   };
   var chart = new ApexCharts(document.querySelector('#chart'), options);
   window.onload = function () {
